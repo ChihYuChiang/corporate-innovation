@@ -96,5 +96,6 @@ reference/
 .vscode/
 kernel*
 .Rproj.user
+.Rproj
 .Rhistory
 .rmd
