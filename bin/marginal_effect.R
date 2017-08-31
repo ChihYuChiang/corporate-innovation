@@ -66,29 +66,31 @@ summary(lm_1)
 Graph
 "
 #--Discrete plot
-instant_effect(lm_1, target_var="x19", on_var="x10") %>%
+instant_effect(lm_2, target_var="x12", on_var="x17") %>%
   ggplot(aes(on_values, effect,
              ymin=effect - 1.96 * se,
              ymax=effect + 1.96 * se)) +
   geom_pointrange() +
   geom_hline(yintercept=0, linetype=2) +
-  labs(title="Marginal effect of x19",
-       subtitle="By x10",
-       x="x10",
-       y="Estimated marginal effect")
+  labs(title="Marginal effect of alliance experience",
+       subtitle="By investment complexity",
+       x="Investment complexity",
+       y="Estimated marginal effect") +
+  ggsave("../img/x12x17-1.png")
 
 
 #--Line plot
-instant_effect(lm_1, target_var="x10", on_var="x13") %>%
+instant_effect(lm_2, target_var="x12", on_var="x17") %>%
   ggplot(aes(on_values, effect)) +
   geom_line() +
   geom_line(aes(y=effect - 1.96 * se), linetype=2) +
   geom_line(aes(y=effect + 1.96 * se), linetype=2) +
   geom_hline(yintercept=0) +
-  labs(title="Marginal effect of x13",
-       subtitle="By x10",
-       x="x10",
-       y="Estimated marginal effect")
+  labs(title="Marginal effect of alliance experience",
+       subtitle="By investment complexity",
+       x="Investment complexity",
+       y="Estimated marginal effect") +
+  ggsave("../img/x12x17-2.png")
 
 
 
