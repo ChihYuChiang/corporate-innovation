@@ -12,6 +12,7 @@ options(digits=4)
 #--Read in csvs
 df1 <- fread("../data/df1.csv") %>% select(-Y2)
 df2 <- fread("../data/df2.csv")
+dfEquity <- fread("../data/equitycombinedata1.csv")
 
 
 #--Function to get point estimates and standard errors
@@ -56,8 +57,9 @@ Model
 "
 lm_1 <- lm(Y1 ~ . + (x13 + x16 + x19) * x10, data=df1)
 lm_2 <- lm(y47 ~ . + (x3 + x12) * x17, data=df2)
+lm_equity <- lm(M11 ~ X11 * M22, data=dfEquity)
 
-summary(lm_1)
+summary(lm_equity)
 
 
 
@@ -80,17 +82,17 @@ instant_effect(lm_2, target_var="x12", on_var="x17") %>%
 
 
 #--Line plot
-instant_effect(lm_2, target_var="x12", on_var="x17") %>%
+instant_effect(lm_equity, target_var="M22", on_var="X11") %>%
   ggplot(aes(on_values, effect)) +
   geom_line() +
   geom_line(aes(y=effect - 1.96 * se), linetype=2) +
   geom_line(aes(y=effect + 1.96 * se), linetype=2) +
   geom_hline(yintercept=0) +
-  labs(title="Marginal effect of alliance experience",
-       subtitle="By investment complexity",
-       x="Investment complexity",
+  labs(title="Marginal effect of equity investment",
+       subtitle="By ambidexterity imbalance",
+       x="Ambidexterity imbalance",
        y="Estimated marginal effect") +
-  ggsave("../img/x12x17-2.png")
+  ggsave("../img/m22x11-2.png")
 
 
 
