@@ -12,7 +12,8 @@ options(digits=4)
 #--Read in csvs
 df1 <- fread("../data/df1.csv") %>% select(-Y2)
 df2 <- fread("../data/df2.csv")
-dfEquity <- fread("../data/equitycombinedata1.csv")
+dfEquity1 <- fread("../data/equitycombinedata1.csv")
+dfEquity2 <- fread("../data/equitycombinedata1(new).csv")
 
 
 #--Function to get point estimates and standard errors
@@ -57,10 +58,13 @@ Model
 "
 lm_1 <- lm(Y1 ~ . + (x13 + x16 + x19) * x10, data=df1)
 lm_2 <- lm(y47 ~ . + (x3 + x12) * x17, data=df2)
-lm_equity_1 <- lm(M11 ~ X11 * M22, data=dfEquity)
-lm_equity_2 <- lm(M12 ~ X11 * M22, data=dfEquity)
+lm_equity_1 <- lm(M11 ~ X11 * M22, data=dfEquity1)
+lm_equity_2 <- lm(M12 ~ X11 * M22, data=dfEquity1)
 
-summary(lm_equity_2)
+lm_equity_patent <- lm(Y2 ~ M22 * M11, data=dfEquity2)
+lm_equity_citation <- lm(Y2 ~ M22 * M12, data=dfEquity2)
+  
+summary(lm_equity_3)
 
 
 
@@ -83,18 +87,18 @@ instant_effect(lm_2, target_var="x12", on_var="x17") %>%
 
 
 #--Line plot
-instant_effect(lm_equity_2, target_var="M22", on_var="X11") %>%
+instant_effect(lm_equity_citation, target_var="M22", on_var="M12") %>%
   ggplot(aes(on_values, effect)) +
   geom_line() +
   geom_line(aes(y=effect - 1.96 * se), linetype=2) +
   geom_line(aes(y=effect + 1.96 * se), linetype=2) +
   geom_hline(yintercept=0) +
-  ylim(-0.125, 2.5) +
-  labs(title="Marginal effect of equity investment",
+  # ylim(-0.125, 2.5) +
+  labs(title="Marginal effect of knowledge exploitation",
        subtitle="By ambidexterity imbalance (citation view)",
        x="Ambidexterity imbalance (citation view)",
        y="Estimated marginal effect") +
-  ggsave("../img/m22x11-2-citation.png")
+  ggsave("../img/m22m12-patent.png")
 
 
 
