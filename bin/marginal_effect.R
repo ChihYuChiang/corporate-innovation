@@ -14,7 +14,7 @@ df1 <- fread("../data/df1.csv") %>% select(-Y2)
 df2 <- fread("../data/df2.csv")
 dfEquity1 <- fread("../data/equitycombinedata1.csv")
 dfEquity2 <- fread("../data/equitycombinedata1(new).csv")
-
+dfSearch <- fread("../data/moderatorgraphdata.csv")
 
 #--Function to get point estimates and standard errors
 instant_effect <- function(model, target_var, on_var){
@@ -63,8 +63,12 @@ lm_equity_2 <- lm(M12 ~ X11 * M22, data=dfEquity1)
 
 lm_equity_patent <- lm(Y2 ~ M22 * M11, data=dfEquity2)
 lm_equity_citation <- lm(Y2 ~ M22 * M12, data=dfEquity2)
+
+lm_search_exploit <- lm(Y11 ~ x10 * x13, data=dfSearch)
+lm_search_explore <- lm(Y11 ~ x10 * x16, data=dfSearch)
+lm_search_balance <- lm(Y11 ~ x10 * x191, data=dfSearch)
   
-summary(lm_equity_3)
+summary(lm_search_balance)
 
 
 
@@ -87,18 +91,18 @@ instant_effect(lm_2, target_var="x12", on_var="x17") %>%
 
 
 #--Line plot
-instant_effect(lm_equity_citation, target_var="M22", on_var="M12") %>%
+instant_effect(lm_search_exploit, target_var="x10", on_var="x13") %>%
   ggplot(aes(on_values, effect)) +
   geom_line() +
   geom_line(aes(y=effect - 1.96 * se), linetype=2) +
   geom_line(aes(y=effect + 1.96 * se), linetype=2) +
   geom_hline(yintercept=0) +
   # ylim(-0.125, 2.5) +
-  labs(title="Marginal effect of knowledge exploitation",
-       subtitle="By ambidexterity imbalance (citation view)",
-       x="Ambidexterity imbalance (citation view)",
+  labs(title="Marginal effect of collaboration exploitation",
+       subtitle="By searching strategy",
+       x="Searching strategy",
        y="Estimated marginal effect") +
-  ggsave("../img/m22m12-patent.png")
+  ggsave("../img/x10x13-y11.png")
 
 
 
